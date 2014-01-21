@@ -10,7 +10,7 @@ module Akiva
     option "headers", type: :boolean, desc: "Displays headers of the requests made to TheBigDB (depends on --verbose/-v)", default: false
     option "caller", type: :boolean, desc: "Displays stack trace from which each request made to TheBigDB is made (depends on --verbose/-v)", default: false
     option "api-host", type: :string, desc: "Host to send requests for TheBigDB (depends on TheBigDB as api)", default: "api.thebigdb.com"
-    option "api", type: string, desc: "Data origin, default: thebigdb (alternative: wikidata) ", default: "thebigdb"
+    option "api", type: :string, desc: "Data origin, default: thebigdb (alternative: wikidata) ", default: "thebigdb"
 
     def ask(question)
       TheBigDB.raise_on_api_status_error = true
