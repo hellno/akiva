@@ -12,32 +12,52 @@ module Akiva
     option "api-host", type: :string, desc: "Host to send requests for TheBigDB (depends on TheBigDB as api)", default: "api.thebigdb.com"
     option "api", type: :string, desc: "Data origin, default: thebigdb (alternative: wikidata) ", default: "thebigdb"
 
-    def ask(question)
-      TheBigDB.raise_on_api_status_error = true
+    no_commands do
 
-      TheBigDB.api_host = options["api-host"]
+      def prepareTheBigDBApi options
 
-      if options["verbose"]
-        require "awesome_print"
-        TheBigDB.before_request_execution = lambda do |request|
-          puts "REQUEST DATA SENT:"
-          data_sent = request.data_sent
-          data_sent.delete("headers") unless options["headers"]
-          ap data_sent
-          if options["caller"]
-            puts "CALLED FROM:"
-            puts caller.join("\n")
+        TheBigDB.raise_on_api_status_error = true
+
+        TheBigDB.api_host = options["api-host"]
+
+        if options["verbose"]
+          require "awesome_print"
+          TheBigDB.before_request_execution = lambda do |request|
+            puts "REQUEST DATA SENT:"
+            data_sent = request.data_sent
+            data_sent.delete("headers") unless options["headers"]
+            ap data_sent
+            if options["caller"]
+              puts "CALLED FROM:"
+              puts caller.join("\n")
+            end
+            puts
           end
-          puts
+
+          TheBigDB.after_request_execution = lambda do |request|
+            puts "REQUEST DATA RECEIVED:"
+            data_received = request.data_received
+            data_received.delete("headers") unless options["headers"]
+            ap data_received
+            puts
+          end
         end
 
-        TheBigDB.after_request_execution = lambda do |request|
-          puts "REQUEST DATA RECEIVED:"
-          data_received = request.data_received
-          data_received.delete("headers") unless options["headers"]
-          ap data_received
-          puts
-        end
+      end
+
+      def prepareWikiDataApi options
+        puts "prepare for the wikidata api sir!"
+      end
+
+    end
+
+    def ask(question)
+      useBigDBApi = options["api"].include? "thebigdb"
+
+      if useBigDBApi
+        prepareTheBigDBApi options
+      else
+        prepareWikiDataApi options
       end
 
       akiva_question = Akiva::Question.new(question)
@@ -47,13 +67,12 @@ module Akiva
         else
           puts "Sorry, Akiva can't answer that question for now."
         end
-      rescue TheBigDB::Request::ApiStatusError
-        puts "Sorry, it looks like TheBigDB is currently unavailable."
+        rescue TheBigDB::Request::ApiStatusError
+          puts "Sorry, it looks like TheBigDB is currently unavailable."
+        end
       end
 
     end
-
-  end
 end
 
 Akiva::CLI.start

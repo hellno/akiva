@@ -25,6 +25,7 @@ module Akiva
     end
 
     def execute_action
+      puts "execute action"
       return self if @executed_action or @filter_matched.nil?
 
       actions_chain = (@filter_matched[:before_action] || []) + [@filter_matched[:action]] + (@filter_matched[:after_action] || []) 

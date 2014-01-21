@@ -24,6 +24,7 @@ module Akiva
 
       def add_action(action_name, class_instance = nil, &block)
         @@actions[action_name] = class_instance || block
+        puts "added action to brain #{action_name}"
       end
 
       def add_formatter(formatter_name, class_instance = nil, &block)
