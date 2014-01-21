@@ -6,7 +6,7 @@ module Akiva
     desc "ask QUESTION", "Process a question, and display the answer"
     # method_option "verbose", type: :boolean, aliases: "-v", desc: "Displays the elements found in the question"
     # option :verbose, type: :boolean, aliases: "-v"
-    option "verbose", type: :boolean, aliases: "-v", desc: "Displays the requests made to ASSASSASSTheBigDB"
+    option "verbose", type: :boolean, aliases: "-v", desc: "Displays the requests made to TheBigDB"
     option "headers", type: :boolean, desc: "Displays headers of the requests made to TheBigDB (depends on --verbose/-v)", default: false
     option "caller", type: :boolean, desc: "Displays stack trace from which each request made to TheBigDB is made (depends on --verbose/-v)", default: false
     option "api-host", type: :string, desc: "Host to send requests for TheBigDB (depends on TheBigDB as api)", default: "api.thebigdb.com"
