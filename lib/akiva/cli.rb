@@ -14,7 +14,7 @@ module Akiva
 
     no_commands do
 
-      def prepareTheBigDBApi options
+      def prepare_theBigDB_api options
 
         TheBigDB.raise_on_api_status_error = true
 
@@ -45,20 +45,29 @@ module Akiva
 
       end
 
-      def prepareWikiDataApi options
+      def prepare_wikiData_api options
         puts "prepare for the wikidata api sir!"
+        
+      end
+
+      def prepare_api options
+        Akiva::Brain.set_api options["api"]
+
+        case options["api"]
+        when /thebigdb/ 
+            prepare_theBigDB_api options
+        when /wikidata/
+            prepare_wikiData_api options
+        else
+          puts "error: did not recognize api parameter"
+        end
+       
       end
 
     end
 
     def ask(question)
-      useBigDBApi = options["api"].include? "thebigdb"
-
-      if useBigDBApi
-        prepareTheBigDBApi options
-      else
-        prepareWikiDataApi options
-      end
+      prepare_api(options)
 
       akiva_question = Akiva::Question.new(question)
       begin

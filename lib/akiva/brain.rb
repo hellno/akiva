@@ -7,7 +7,6 @@ module Akiva
 
     class << self
       def update(&block)
-        puts "brain update"
         instance_exec(&block)
       end
 
@@ -27,7 +26,6 @@ module Akiva
 
       def add_action(action_name, class_instance = nil, &block)
         @@actions[action_name] = class_instance || block
-        puts "added action to brain #{action_name}"
       end
 
       def add_formatter(formatter_name, class_instance = nil, &block)
@@ -37,9 +35,11 @@ module Akiva
       def set_api api_flag
         case api_flag
         when /thebigdb/ 
-            puts "thebigdb as api"  
+            puts "thebigdb as brain api"  
         when /wikidata/
-            puts "wikidata as api"
+            puts "wikidata as brain api"
+        else
+          puts "default: thebigdb as api"
         end 
         
       end
